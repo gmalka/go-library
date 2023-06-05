@@ -66,7 +66,7 @@ func generateData(db *sqlx.DB) error {
 	if err != nil {
 		return err
 	}
-	if res.Next() == false {
+	if !res.Next() {
 		for i := 0; i < 10; i++ {
 			name := gofakeit.Name()
 			lastname := gofakeit.LastName()
@@ -78,15 +78,21 @@ func generateData(db *sqlx.DB) error {
 	if err != nil {
 		return err
 	}
-	if res.Next() == false {
+	if !res.Next() {
 		for i := 0; i < 100; i++ {
 			auth_id := 0
 			row := db.QueryRow("SELECT id FROM author ORDER BY RANDOM() LIMIT 1")
-			row.Scan(&auth_id)
+			err = row.Scan(&auth_id)
+			if err != nil {
+				return err
+			}
 			name1 := gofakeit.Word()
 			name2 := gofakeit.Word()
 
-			db.Exec("INSERT INTO books(name, author_id) VALUES($1, &2)", fmt.Sprintf("%s %s", name1, name2), auth_id)
+			_, err = db.Exec("INSERT INTO books(name, author_id) VALUES($1, $2)", fmt.Sprintf("%s %s", name1, name2), auth_id)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
@@ -94,7 +100,7 @@ func generateData(db *sqlx.DB) error {
 	if err != nil {
 		return err
 	}
-	if res.Next() == false {
+	if !res.Next() {
 		for i := 0; i < 50; i++ {
 			name := gofakeit.Username()
 
