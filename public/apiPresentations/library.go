@@ -10,7 +10,7 @@ type libraryEmptyResponse struct {}
 
 
 
-// swagger:route GET /users/{user_id}/library users getTakenBookRequest
+// swagger:route GET /users/{user_id}/library library getTakenBookRequest
 // Получение всех взятых юзером книг
 // responses:
 //   200: getTakenBookResponse
@@ -33,7 +33,7 @@ type getTakenBookResponse struct {
 
 
 
-// swagger:route POST /users/{user_id}/library/{book_id} users takeBookRequest
+// swagger:route POST /users/{user_id}/library/{book_id} library takeBookRequest
 // Взятие новой книги пользователем
 // responses:
 //   200: libraryEmptyResponse
@@ -51,7 +51,7 @@ type takeBookRequest struct {
 }
 
 
-// swagger:route DELETE /users/{user_id}/library/{book_id} users putBackBookRequest
+// swagger:route DELETE /users/{user_id}/library/{book_id} library putBackBookRequest
 // Возвращение взятой книги пользователем
 // responses:
 //   200: libraryEmptyResponse

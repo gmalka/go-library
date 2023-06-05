@@ -235,6 +235,90 @@
           }
         }
       }
+    },
+    "/users/{user_id}/library": {
+      "get": {
+        "description": "Получение всех взятых юзером книг",
+        "tags": [
+          "library"
+        ],
+        "operationId": "getTakenBookRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID_author",
+            "description": "ID юзера",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/getTakenBookResponse"
+          }
+        }
+      }
+    },
+    "/users/{user_id}/library/{book_id}": {
+      "post": {
+        "description": "Взятие новой книги пользователем",
+        "tags": [
+          "library"
+        ],
+        "operationId": "takeBookRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID_author",
+            "description": "ID юзера",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "ID книги",
+            "name": "ID_book",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/libraryEmptyResponse"
+          }
+        }
+      },
+      "delete": {
+        "description": "Возвращение взятой книги пользователем",
+        "tags": [
+          "library"
+        ],
+        "operationId": "putBackBookRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID_author",
+            "description": "ID юзера",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "ID книги",
+            "name": "ID_book",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/libraryEmptyResponse"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -356,6 +440,18 @@
           "$ref": "#/definitions/TakenBook"
         }
       }
+    },
+    "getTakenBookResponse": {
+      "description": "",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BookWithAuthor"
+        }
+      }
+    },
+    "libraryEmptyResponse": {
+      "description": ""
     },
     "userEmptyResponse": {
       "description": ""

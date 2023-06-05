@@ -15,6 +15,8 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/brianvoe/gofakeit/v6"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 
@@ -42,6 +44,10 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	err = generateData(db)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	authManager := authorManager.NewAuthorManager(db)
 	userManager := userManager.NewuserManager(db)
@@ -53,6 +59,50 @@ func main() {
 	
 	h := handler.NewHandler(service)
 	RunServer(fmt.Sprintf("%s:%s", url, port), h.IniRouter())
+}
+
+func generateData(db *sqlx.DB) error {
+	res, err := db.Query("SELECT * FROM author")
+	if err != nil {
+		return err
+	}
+	if res.Next() == false {
+		for i := 0; i < 10; i++ {
+			name := gofakeit.Name()
+			lastname := gofakeit.LastName()
+			db.Exec("INSERT INTO author(name) VALUES($1)", fmt.Sprintf("%s %s", name, lastname))
+		}
+	}
+
+	res, err = db.Query("SELECT * FROM books")
+	if err != nil {
+		return err
+	}
+	if res.Next() == false {
+		for i := 0; i < 100; i++ {
+			auth_id := 0
+			row := db.QueryRow("SELECT id FROM author ORDER BY RANDOM() LIMIT 1")
+			row.Scan(&auth_id)
+			name1 := gofakeit.Word()
+			name2 := gofakeit.Word()
+
+			db.Exec("INSERT INTO books(name, author_id) VALUES($1, &2)", fmt.Sprintf("%s %s", name1, name2), auth_id)
+		}
+	}
+
+	res, err = db.Query("SELECT * FROM users")
+	if err != nil {
+		return err
+	}
+	if res.Next() == false {
+		for i := 0; i < 50; i++ {
+			name := gofakeit.Username()
+
+			db.Exec("INSERT INTO users(name) VALUES($1)", name)
+		}
+	}
+
+	return nil
 }
 
 func RunServer(addr string, h http.Handler) {
