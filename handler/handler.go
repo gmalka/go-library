@@ -104,9 +104,9 @@ func (h *Handler) IniRouter() http.Handler {
 		r.Delete("/{id}", h.DeleteAuthor)
 
 		r.Route("/{author_id}/books", func(r chi.Router) {
-			r.Get("/books", h.GetAllAuthorBooks)
-			r.Post("/books", h.AddBook)
-			r.Delete("/books/{id}", h.DeleteBook)
+			r.Get("/", h.GetAllAuthorBooks)
+			r.Post("/", h.AddBook)
+			r.Delete("/{id}", h.DeleteBook)
 		})
 	})
 
@@ -116,7 +116,7 @@ func (h *Handler) IniRouter() http.Handler {
 		r.Post("/", h.AddUser)
 		r.Delete("/{id}", h.DeleteUser)
 
-		r.Route("/{id}", func(r chi.Router) {
+		r.Route("/{id}/library", func(r chi.Router) {
 			r.Get("/", h.GetAllTakenBooksOfUser)
 			r.Get("/{book_id}", h.GetTakenBook)
 			r.Post("/{book_id}", h.TakeBook)

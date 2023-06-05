@@ -11,7 +11,9 @@ import (
 )
 
 func (h Handler) AddBook(w http.ResponseWriter, r *http.Request) {
-	var book model.Book
+	var book model.BookWithAuthor
+
+	author_id := chi.URLParam(r, "author_id")
 
 	b, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -19,8 +21,19 @@ func (h Handler) AddBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.Unmarshal(b, &book)
+	err = json.Unmarshal(b, &book)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
+	aid, err := strconv.Atoi(author_id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	book.Auth.Id = aid
 	err = h.service.AddBook(book)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

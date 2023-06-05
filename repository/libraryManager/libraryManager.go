@@ -12,8 +12,6 @@ type libraryManger struct {
 	db *sqlx.DB
 }
 
-
-
 type LibraryMangerI interface {
 	PutBookBack(userId, bookId int) error
 	TakeBook(userId, bookId int) error

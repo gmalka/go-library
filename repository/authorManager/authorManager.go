@@ -34,7 +34,7 @@ func (a authorManager) Delete(id int) error {
 		return err
 	}
 
-	_, err = tx.Exec("DELETE FROM book WHERE author_id=$1", id)
+	_, err = tx.Exec("DELETE FROM books WHERE author_id=$1", id)
 	if err != nil {
 		return err
 	}

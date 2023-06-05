@@ -43,8 +43,6 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	fmt.Printf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
-		postgresUrl, postgresPort, postgresUser, postgresPassword, databaseName, sslmode)
 	authManager := authorManager.NewAuthorManager(db)
 	userManager := userManager.NewuserManager(db)
 	bookManager := bookManager.NewBookManager(db)
