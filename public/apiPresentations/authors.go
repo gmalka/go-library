@@ -27,7 +27,7 @@ type authorGetAllResponse struct {
 // responses:
 //   200: authorEmptyResponse
 
-// swagger:parameter authorAddRequest
+// swagger:parameters authorAddRequest
 type authorAddRequest struct {
 	// Достаточно только поля name(Имя автора)
 	//
@@ -41,7 +41,7 @@ type authorAddRequest struct {
 // responses:
 //   200: authorEmptyResponse
 
-// swagger:parameter authorDeleteRequest
+// swagger:parameters authorDeleteRequest
 type authorDeleteRequest struct {
 	// ID удаляемого автора
 	//

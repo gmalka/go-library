@@ -96,8 +96,6 @@ func (h *Handler) IniRouter() http.Handler {
 	r.Get("/", h.GetAllTakenBooks)
 	r.Get("/books", h.GetAllBooks)
 
-	
-
 	r.Route("/authors", func(r chi.Router) {
 		r.Get("/", h.GetAllAuthors)
 		r.Post("/", h.AddAuthor)
@@ -112,13 +110,11 @@ func (h *Handler) IniRouter() http.Handler {
 
 	r.Route("/users", func(r chi.Router) {
 		r.Get("/", h.GetAllUsers)
-		r.Get("/{id}", h.GetUser)
 		r.Post("/", h.AddUser)
 		r.Delete("/{id}", h.DeleteUser)
 
 		r.Route("/{id}/library", func(r chi.Router) {
 			r.Get("/", h.GetAllTakenBooksOfUser)
-			r.Get("/{book_id}", h.GetTakenBook)
 			r.Post("/{book_id}", h.TakeBook)
 			r.Delete("/{book_id}", h.ReturnBook)
 		})

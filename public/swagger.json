@@ -1,0 +1,373 @@
+{
+  "swagger": "2.0",
+  "info": {},
+  "paths": {
+    "/": {
+      "get": {
+        "description": "Получение взятых книг и взявших их пользователей",
+        "tags": [
+          "default"
+        ],
+        "operationId": "defaultGetAllTakenBooksRequest",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/defaultGetAllResponse"
+          }
+        }
+      }
+    },
+    "/authors": {
+      "get": {
+        "description": "Получение всех авторов",
+        "tags": [
+          "authors"
+        ],
+        "operationId": "authorEmptyRequest",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/authorGetAllResponse"
+          }
+        }
+      },
+      "post": {
+        "description": "Создание нового автора",
+        "tags": [
+          "authors"
+        ],
+        "operationId": "authorAddRequest",
+        "parameters": [
+          {
+            "description": "Достаточно только поля name(Имя автора)",
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Author"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/authorEmptyResponse"
+          }
+        }
+      }
+    },
+    "/authors/{author_id}": {
+      "post": {
+        "description": "Удаление автора",
+        "tags": [
+          "authors"
+        ],
+        "operationId": "authorDeleteRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID",
+            "description": "ID удаляемого автора",
+            "name": "author_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/authorEmptyResponse"
+          }
+        }
+      }
+    },
+    "/authors/{author_id}/books": {
+      "get": {
+        "description": "Получение всех книг автора",
+        "tags": [
+          "books"
+        ],
+        "operationId": "bookGetAllOfAuthorRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID_author",
+            "description": "ID автора",
+            "name": "author_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/bookGetAllOfAuthorResponse"
+          }
+        }
+      },
+      "post": {
+        "description": "Создание новой книги автора",
+        "tags": [
+          "books"
+        ],
+        "operationId": "bookAddRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID_author",
+            "description": "ID автора",
+            "name": "author_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Требуется только name(Имя автора)",
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/bookEmptyResponse"
+          }
+        }
+      }
+    },
+    "/authors/{author_id}/books/{book_id}": {
+      "delete": {
+        "description": "Удаление книги автора",
+        "tags": [
+          "books"
+        ],
+        "operationId": "bookDeleteRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID_author",
+            "description": "ID автора",
+            "name": "author_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "ID_book",
+            "description": "ID книги",
+            "name": "book_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/bookEmptyResponse"
+          }
+        }
+      }
+    },
+    "/books": {
+      "get": {
+        "description": "Получение всех книг",
+        "tags": [
+          "default"
+        ],
+        "operationId": "defaultGetAllBooksRequest",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/defaultGetAllBooksResponse"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "description": "Получение всех пользователей",
+        "tags": [
+          "users"
+        ],
+        "operationId": "userEmptyRequest",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/userGetAllResponse"
+          }
+        }
+      },
+      "post": {
+        "description": "Создание нового пользователя",
+        "tags": [
+          "users"
+        ],
+        "operationId": "userAddRequest",
+        "parameters": [
+          {
+            "description": "Требуется только name(Имя пользователя)",
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/userEmptyResponse"
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "delete": {
+        "description": "Удаление пользователя",
+        "tags": [
+          "users"
+        ],
+        "operationId": "userDeleteRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID",
+            "description": "ID удаляемого пользователя",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/userEmptyResponse"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Author": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Id"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        }
+      },
+      "x-go-package": "go-library/model"
+    },
+    "Book": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Id"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        }
+      },
+      "x-go-package": "go-library/model"
+    },
+    "BookWithAuthor": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "$ref": "#/definitions/Author"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Id"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        }
+      },
+      "x-go-package": "go-library/model"
+    },
+    "TakenBook": {
+      "type": "object",
+      "properties": {
+        "book": {
+          "$ref": "#/definitions/BookWithAuthor"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        }
+      },
+      "x-go-package": "go-library/model"
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Id"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        }
+      },
+      "x-go-package": "go-library/model"
+    }
+  },
+  "responses": {
+    "authorEmptyResponse": {
+      "description": ""
+    },
+    "authorGetAllResponse": {
+      "description": "",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Author"
+        }
+      }
+    },
+    "bookEmptyResponse": {
+      "description": ""
+    },
+    "bookGetAllOfAuthorResponse": {
+      "description": "",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Book"
+        }
+      }
+    },
+    "defaultGetAllBooksResponse": {
+      "description": "",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/BookWithAuthor"
+        }
+      }
+    },
+    "defaultGetAllResponse": {
+      "description": "",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/TakenBook"
+        }
+      }
+    },
+    "userEmptyResponse": {
+      "description": ""
+    },
+    "userGetAllResponse": {
+      "description": "",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    }
+  }
+}
