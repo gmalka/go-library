@@ -11,17 +11,17 @@ type bookManager struct {
 }
 
 type BookManagerI interface {
-	Add(book model.Book) error
-	Get(id int) (model.Book, error)
-	GetAll() ([]model.Book, error)
-	Delete(id int) error
+	Add(book model.BookWithAuthor) error
+	Get(bid, aid int) (model.BookWithAuthor, error)
+	GetAll() ([]model.BookWithAuthor, error)
+	Delete(bid, aid int) error
 }
 
 func NewBookManager(db *sqlx.DB) BookManagerI {
 	return bookManager{db: db}
 }
 
-func (a bookManager) Add(book model.Book) error {
+func (a bookManager) Add(book model.BookWithAuthor) error {
 	_, err := a.db.Exec("INSERT INTO books(name, author_id) VALUES($1, $2)", book.Name, book.Auth.Id)
 	if err != nil {
 		return err
@@ -30,15 +30,15 @@ func (a bookManager) Add(book model.Book) error {
 	return nil
 }
 
-func (a bookManager) GetAll() ([]model.Book, error) {
+func (a bookManager) GetAll() ([]model.BookWithAuthor, error) {
 	rows, err := a.db.Query("SELECT * FROM books")
 	if err != nil {
 		return nil, err
 	}
 
-	books := make([]model.Book, 0, 10)
+	books := make([]model.BookWithAuthor, 0, 10)
 	for rows.Next() {
-		book := model.Book{}
+		book := model.BookWithAuthor{}
 		authorId := 0
 		err := rows.Scan(&book.Id, &book.Name, &authorId)
 		if err != nil {
@@ -60,8 +60,8 @@ func (a bookManager) GetAll() ([]model.Book, error) {
 	return books, nil
 }
 
-func (a bookManager) Delete(id int) error {
-	_, err := a.db.Exec("DELETE FROM books WHERE id=$1", id)
+func (a bookManager) Delete(bid, aid int) error {
+	_, err := a.db.Exec("DELETE FROM books WHERE id=$1 AND author_id=$2", bid, aid)
 	if err != nil {
 		return err
 	}
@@ -69,13 +69,39 @@ func (a bookManager) Delete(id int) error {
 	return nil
 }
 
-func (a bookManager) Get(id int) (model.Book, error) {
-	row := a.db.QueryRow("SELECT * FROM books WHERE id=$1", id)
+func (a bookManager) Get(bid, aid int) (model.BookWithAuthor, error) {
+	row := a.db.QueryRow("SELECT * FROM books WHERE id=$1 AND author_id=$2", bid, aid)
 
-	book := model.Book{}
+	book := model.BookWithAuthor{}
 	err := row.Scan(&book.Id, &book.Name)
 	if err != nil {
-		return model.Book{}, err
+		return model.BookWithAuthor{}, err
+	}
+
+	authorId := 0
+	err = row.Scan(&authorId)
+	if err != nil {
+		return book, err
+	}
+
+	authrRow := a.db.QueryRow("SELECT * FROM author WHERE id=$1", authorId)
+	author := model.Author{}
+	err = authrRow.Scan(&author.Id, &author.Name)
+	if err != nil {
+		return book, err
+	}
+	book.Auth = author
+
+	return book, nil
+}
+
+func (a bookManager) Get(bid, aid int) (model.BookWithAuthor, error) {
+	row := a.db.QueryRow("SELECT * FROM books WHERE id=$1 AND author_id=$2", bid, aid)
+
+	book := model.BookWithAuthor{}
+	err := row.Scan(&book.Id, &book.Name)
+	if err != nil {
+		return model.BookWithAuthor{}, err
 	}
 
 	authorId := 0

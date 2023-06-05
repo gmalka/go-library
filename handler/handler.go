@@ -67,10 +67,10 @@ type Library interface {
 	GetAllAuthors() ([]model.Author, error)
 	DeleteAuthor(id int) error
 
-	AddBook(book model.Book) error
-	GetBook(id int) (model.Book, error)
-	GetAllBooks() ([]model.Book, error)
-	DeleteBook(id int) error
+	AddBook(book model.BookWithAuthor) error
+	GetBook(bid, aid int) (model.BookWithAuthor, error)
+	GetAllBooks() ([]model.BookWithAuthor, error)
+	DeleteBook(bid, aid int) error
 }
 
 type Handler struct {
@@ -93,19 +93,22 @@ func (h *Handler) IniRouter() http.Handler {
 	})
 
 	r.Get("/", h.GetAllTakenBooks)
+	r.Get("/books", h.GetAllBooks)
 
-	r.Route("/books", func(r chi.Router) {
-		r.Get("/", h.GetAllBooks)
-		r.Get("/{id}", h.GetBook)
-		r.Post("/", h.AddBook)
-		r.Delete("/{id}", h.DeleteBook)
-	})
+	
 
 	r.Route("/authors", func(r chi.Router) {
 		r.Get("/", h.GetAllAuthors)
-		r.Get("/{id}", h.GetAuthor)
+//		r.Get("/{id}", h.GetAuthor)
 		r.Post("/", h.AddAuthor)
 		r.Delete("/{id}", h.DeleteAuthor)
+
+		r.Route("/{author_id}/books", func(r chi.Router) {
+			r.Get("/books", h.GetAllAuthorBooks)
+//			r.Get("/{id}", h.GetBook)
+			r.Post("/books", h.AddBook)
+			r.Delete("/books/{id}", h.DeleteBook)
+		})
 	})
 
 	r.Route("/users", func(r chi.Router) {

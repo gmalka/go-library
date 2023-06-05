@@ -18,7 +18,7 @@ type LibraryMangerI interface {
 	PutBookBack(userId, bookId int) error
 	TakeBook(userId, bookId int) error
 	GetAllTakenBooks() ([]model.TakenBook, error)
-	GetAllTakenBooksOfUser(id int) ([]model.Book, error)
+	GetAllTakenBooksOfUser(id int) ([]model.BookWithAuthor, error)
 }
 
 func NewLibraryManager(db *sqlx.DB) LibraryMangerI {
@@ -61,7 +61,7 @@ func (a libraryManger) GetAllTakenBooks() ([]model.TakenBook, error) {
 	for rows.Next() {
 		var (
 			user 	model.User
-			book 	model.Book
+			book 	model.BookWithAuthor
 			userId int
 			bookId int
 		)
@@ -90,16 +90,16 @@ func (a libraryManger) GetAllTakenBooks() ([]model.TakenBook, error) {
 	return takenBooks, nil
 }
 
-func (a libraryManger) GetAllTakenBooksOfUser(id int) ([]model.Book, error) {
+func (a libraryManger) GetAllTakenBooksOfUser(id int) ([]model.BookWithAuthor, error) {
 	rows, err := a.db.Query("SELECT book_id FROM takenBook WHERE user_id=$1", id)
 	if err != nil {
 		return nil, err
 	}
 
-	books := make([]model.Book, 0, 10)
+	books := make([]model.BookWithAuthor, 0, 10)
 	for rows.Next() {
 		var (
-			book 	model.Book
+			book 	model.BookWithAuthor
 			bookId int
 		)
 		err = rows.Scan(&bookId)

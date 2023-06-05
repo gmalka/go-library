@@ -19,24 +19,24 @@ type UserManagerI interface {
 }
 
 type BookManagerI interface {
-	Add(book model.Book) error
-	Get(id int) (model.Book, error)
-	GetAll() ([]model.Book, error)
-	Delete(id int) error
+	Add(book model.BookWithAuthor) error
+	Get(bid, aid int) (model.BookWithAuthor, error)
+	GetAll() ([]model.BookWithAuthor, error)
+	Delete(bid, aid int) error
 }
 
 type LibraryMangerI interface {
 	PutBookBack(userId, bookId int) error
 	TakeBook(userId, bookId int) error
 	GetAllTakenBooks() ([]model.TakenBook, error)
-	GetAllTakenBooksOfUser(id int) ([]model.Book, error)
+	GetAllTakenBooksOfUser(id int) ([]model.BookWithAuthor, error)
 }
 
 type Library interface {
 	PutBookBack(userId, bookId int) error
 	TakeBook(userId, bookId int) error
 	GetAllTakenBooks() ([]model.TakenBook, error)
-	GetAllTakenBooksOfUser(id int) ([]model.Book, error)
+	GetAllTakenBooksOfUser(id int) ([]model.BookWithAuthor, error)
 
 	AddUser(user model.User) error
 	GetUser(id int) (model.User, error)
@@ -48,10 +48,10 @@ type Library interface {
 	GetAllAuthors() ([]model.Author, error)
 	DeleteAuthor(id int) error
 
-	AddBook(book model.Book) error
-	GetBook(id int) (model.Book, error)
-	GetAllBooks() ([]model.Book, error)
-	DeleteBook(id int) error
+	AddBook(book model.BookWithAuthor) error
+	GetBook(bid, aid int) (model.BookWithAuthor, error)
+	GetAllBooks() ([]model.BookWithAuthor, error)
+	DeleteBook(bid, aid int) error
 }
 
 type myLibrary struct {
@@ -67,7 +67,7 @@ func NewLibrary(a AuthorManagerI, u UserManagerI, b BookManagerI, l LibraryMange
 
 // <-------------LIBRARY------------->
 
-func (m myLibrary) GetAllTakenBooksOfUser(id int) ([]model.Book, error) {
+func (m myLibrary) GetAllTakenBooksOfUser(id int) ([]model.BookWithAuthor, error) {
 	return m.libraryManager.GetAllTakenBooksOfUser(id)
 }
 
@@ -121,18 +121,18 @@ func (m myLibrary) DeleteAuthor(id int) error {
 
 // <-------------BOOKS------------->
 
-func (m myLibrary) AddBook(book model.Book) error {
+func (m myLibrary) AddBook(book model.BookWithAuthor) error {
 	return m.booksManager.Add(book)
 }
 
-func (m myLibrary) GetBook(id int) (model.Book, error) {
-	return m.booksManager.Get(id)
+func (m myLibrary) GetBook(bid, aid int) (model.BookWithAuthor, error) {
+	return m.booksManager.Get(bid, aid)
 }
 
-func (m myLibrary) GetAllBooks() ([]model.Book, error) {
+func (m myLibrary) GetAllBooks() ([]model.BookWithAuthor, error) {
 	return m.booksManager.GetAll()
 }
 
-func (m myLibrary) DeleteBook(id int) error {
-	return m.booksManager.Delete(id)
+func (m myLibrary) DeleteBook(bid, aid int) error {
+	return m.booksManager.Delete(bid, aid)
 }
