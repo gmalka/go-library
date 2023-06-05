@@ -114,7 +114,7 @@ func (h Handler) GetAllAuthorBooks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	books, err := h.service.GetAllAuthorBooks(aid)
+	books, err := h.service.GetAllBooksOfAuthor(aid)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

@@ -23,6 +23,7 @@ type BookManagerI interface {
 	Get(bid, aid int) (model.BookWithAuthor, error)
 	GetAll() ([]model.BookWithAuthor, error)
 	Delete(bid, aid int) error
+	GetAllOfAuthor(aid int) ([]model.BookWithAuthor, error)
 }
 
 type LibraryMangerI interface {
@@ -51,6 +52,7 @@ type Library interface {
 	AddBook(book model.BookWithAuthor) error
 	GetBook(bid, aid int) (model.BookWithAuthor, error)
 	GetAllBooks() ([]model.BookWithAuthor, error)
+	GetAllBooksOfAuthor(aid int) ([]model.BookWithAuthor, error)
 	DeleteBook(bid, aid int) error
 }
 
@@ -135,4 +137,8 @@ func (m myLibrary) GetAllBooks() ([]model.BookWithAuthor, error) {
 
 func (m myLibrary) DeleteBook(bid, aid int) error {
 	return m.booksManager.Delete(bid, aid)
+}
+
+func (m myLibrary) GetAllBooksOfAuthor(aid int) ([]model.BookWithAuthor, error) {
+	return m.booksManager.GetAllOfAuthor(aid)
 }

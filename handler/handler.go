@@ -55,8 +55,8 @@ type Library interface {
 	PutBookBack(userId, bookId int) error
 	TakeBook(userId, bookId int) error
 	GetAllTakenBooks() ([]model.TakenBook, error)
-	GetAllTakenBooksOfUser(id int) ([]model.Book, error)
-	
+	GetAllTakenBooksOfUser(id int) ([]model.BookWithAuthor, error)
+
 	AddUser(user model.User) error
 	GetUser(id int) (model.User, error)
 	GetAllUsers() ([]model.User, error)
@@ -70,6 +70,7 @@ type Library interface {
 	AddBook(book model.BookWithAuthor) error
 	GetBook(bid, aid int) (model.BookWithAuthor, error)
 	GetAllBooks() ([]model.BookWithAuthor, error)
+	GetAllBooksOfAuthor(aid int) ([]model.BookWithAuthor, error)
 	DeleteBook(bid, aid int) error
 }
 
@@ -99,13 +100,11 @@ func (h *Handler) IniRouter() http.Handler {
 
 	r.Route("/authors", func(r chi.Router) {
 		r.Get("/", h.GetAllAuthors)
-//		r.Get("/{id}", h.GetAuthor)
 		r.Post("/", h.AddAuthor)
 		r.Delete("/{id}", h.DeleteAuthor)
 
 		r.Route("/{author_id}/books", func(r chi.Router) {
 			r.Get("/books", h.GetAllAuthorBooks)
-//			r.Get("/{id}", h.GetBook)
 			r.Post("/books", h.AddBook)
 			r.Delete("/books/{id}", h.DeleteBook)
 		})
