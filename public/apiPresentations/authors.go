@@ -36,7 +36,7 @@ type authorAddRequest struct {
 }
 
 
-// swagger:route POST /authors/{author_id} authors authorDeleteRequest
+// swagger:route DELETE /authors/{author_id} authors authorDeleteRequest
 // Удаление автора
 // responses:
 //   200: authorEmptyResponse

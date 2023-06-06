@@ -22,7 +22,11 @@ func NewuserManager(db *sqlx.DB) UserManagerI {
 }
 
 func (a userManager) Delete(id int) error {
-	_, err := a.db.Exec("DELETE FROM users WHERE id=$1", id)
+	_, err := a.db.Exec("DELETE FROM takenBook WHERE user_id=$1", id)
+	if err != nil {
+		return err
+	}
+	_, err = a.db.Exec("DELETE FROM users WHERE id=$1", id)
 	return err
 }
 

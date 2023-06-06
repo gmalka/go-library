@@ -2,6 +2,7 @@ package bookManager
 
 import (
 	"errors"
+	"fmt"
 	"go-library/model"
 
 	"github.com/jmoiron/sqlx"
@@ -15,7 +16,7 @@ type BookManagerI interface {
 	Add(book model.BookWithAuthor) error
 	Get(bid, aid int) (model.BookWithAuthor, error)
 	GetAll() ([]model.BookWithAuthor, error)
-	Delete(bid, aid int) error
+	Delete(bid int) error
 	GetAllOfAuthor(aid int) ([]model.Book, error)
 }
 
@@ -26,7 +27,7 @@ func NewBookManager(db *sqlx.DB) BookManagerI {
 func (a bookManager) Add(book model.BookWithAuthor) error {
 	_, err := a.db.Exec("INSERT INTO books(name, author_id) VALUES($1, $2)", book.Name, book.Auth.Id)
 	if err != nil {
-		return err
+		return fmt.Errorf("can't find author with ID %d", book.Auth.Id)
 	}
 
 	return nil
@@ -63,8 +64,13 @@ func (a bookManager) GetAll() ([]model.BookWithAuthor, error) {
 	return books, nil
 }
 
-func (a bookManager) Delete(bid, aid int) error {
-	result, err := a.db.Exec("DELETE FROM books WHERE id=$1 AND author_id=$2", bid, aid)
+func (a bookManager) Delete(bid int) error {
+	_, err := a.db.Exec("DELETE FROM takenBook WHERE book_id=$1", bid)
+	if err != nil {
+		return err
+	}
+
+	result, err := a.db.Exec("DELETE FROM books WHERE id=$1", bid)
 	if err != nil {
 		return err
 	}

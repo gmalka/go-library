@@ -53,7 +53,7 @@
       }
     },
     "/authors/{author_id}": {
-      "post": {
+      "delete": {
         "description": "Удаление автора",
         "tags": [
           "authors"
@@ -130,22 +130,28 @@
         }
       }
     },
-    "/authors/{author_id}/books/{book_id}": {
+    "/books": {
+      "get": {
+        "description": "Получение всех книг",
+        "tags": [
+          "books"
+        ],
+        "operationId": "booksGetAllBooksRequest",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/booksGetAllBooksResponse"
+          }
+        }
+      }
+    },
+    "/books/{book_id}": {
       "delete": {
-        "description": "Удаление книги автора",
+        "description": "Удаление книги",
         "tags": [
           "books"
         ],
         "operationId": "bookDeleteRequest",
         "parameters": [
-          {
-            "type": "string",
-            "x-go-name": "ID_author",
-            "description": "ID автора",
-            "name": "author_id",
-            "in": "path",
-            "required": true
-          },
           {
             "type": "string",
             "x-go-name": "ID_book",
@@ -158,20 +164,6 @@
         "responses": {
           "200": {
             "$ref": "#/responses/bookEmptyResponse"
-          }
-        }
-      }
-    },
-    "/books": {
-      "get": {
-        "description": "Получение всех книг",
-        "tags": [
-          "default"
-        ],
-        "operationId": "defaultGetAllBooksRequest",
-        "responses": {
-          "200": {
-            "$ref": "#/responses/defaultGetAllBooksResponse"
           }
         }
       }
@@ -278,8 +270,9 @@
           },
           {
             "type": "string",
+            "x-go-name": "ID_book",
             "description": "ID книги",
-            "name": "ID_book",
+            "name": "book_id",
             "in": "path",
             "required": true
           }
@@ -307,8 +300,9 @@
           },
           {
             "type": "string",
+            "x-go-name": "ID_book",
             "description": "ID книги",
-            "name": "ID_book",
+            "name": "book_id",
             "in": "path",
             "required": true
           }
@@ -445,7 +439,7 @@
         }
       }
     },
-    "defaultGetAllBooksResponse": {
+    "booksGetAllBooksResponse": {
       "description": "",
       "schema": {
         "type": "array",

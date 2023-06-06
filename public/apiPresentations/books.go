@@ -9,6 +9,23 @@ type bookEmptyRequest struct {}
 type bookEmptyResponse struct {}
 
 
+// swagger:route GET /books books booksGetAllBooksRequest
+// Получение всех книг
+// responses:
+//   200: booksGetAllBooksResponse
+
+// swagger:parameters booksGetAllBooksRequest
+type booksGetAllBooksRequest struct {}
+
+// swagger:response booksGetAllBooksResponse
+type booksGetAllBooksResponse struct {
+	// Массив книг
+	//
+	// in:body
+	Body []model.BookWithAuthor
+}
+
+
 // swagger:route GET /authors/{author_id}/books books bookGetAllOfAuthorRequest
 // Получение всех книг автора
 // responses:
@@ -49,17 +66,13 @@ type bookAddRequest struct {
 }
 
 
-// swagger:route DELETE /authors/{author_id}/books/{book_id} books bookDeleteRequest
-// Удаление книги автора
+// swagger:route DELETE /books/{book_id} books bookDeleteRequest
+// Удаление книги
 // responses:
 //   200: bookEmptyResponse
 
 // swagger:parameters bookDeleteRequest
 type bookDeleteRequest struct {
-	// ID автора
-	//
-	// in:path
-	ID_author string `json:"author_id"`
 	// ID книги
 	//
 	// in:path

@@ -94,7 +94,6 @@ func (h Handler) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h Handler) DeleteBook(w http.ResponseWriter, r *http.Request) {
-	author_id := chi.URLParam(r, "author_id")
 	bookId := chi.URLParam(r, "id")
 
 	bid, err := strconv.Atoi(bookId)
@@ -103,13 +102,7 @@ func (h Handler) DeleteBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	aid, err := strconv.Atoi(author_id)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	err = h.service.DeleteBook(bid, aid)
+	err = h.service.DeleteBook(bid)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

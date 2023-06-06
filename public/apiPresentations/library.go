@@ -47,7 +47,7 @@ type takeBookRequest struct {
 	// ID книги
 	//
 	// in:path
-	ID_book string `book_id:"user_id"`
+	ID_book string `json:"book_id"`
 }
 
 
@@ -65,5 +65,5 @@ type putBackBookRequest struct {
 	// ID книги
 	//
 	// in:path
-	ID_book string `book_id:"user_id"`
+	ID_book string `json:"book_id"`
 }

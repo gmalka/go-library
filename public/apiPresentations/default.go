@@ -18,20 +18,3 @@ type defaultGetAllResponse struct {
 	// in:body
 	Body []model.TakenBook
 }
-
-
-// swagger:route GET /books default defaultGetAllBooksRequest
-// Получение всех книг
-// responses:
-//   200: defaultGetAllBooksResponse
-
-// swagger:parameters defaultEmptyRequest
-type defaultGetAllBooksRequest struct {}
-
-// swagger:response defaultGetAllBooksResponse
-type defaultGetAllBooksResponse struct {
-	// Массив книг
-	//
-	// in:body
-	Body []model.BookWithAuthor
-}

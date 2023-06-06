@@ -1,6 +1,7 @@
 package authorManager
 
 import (
+	"fmt"
 	"go-library/model"
 
 	"github.com/jmoiron/sqlx"
@@ -97,7 +98,7 @@ func (a authorManager) GetAll() ([]model.AuthorWithBooks, error) {
 func (a authorManager) Add(author model.Author) error {
 	_, err := a.db.Exec("INSERT INTO author(name) VALUES($1)", author.Name)
 	if err != nil {
-		return err
+		return fmt.Errorf("can't add author %s", author.Name)
 	}
 
 	return nil
