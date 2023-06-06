@@ -18,7 +18,7 @@ type authorGetAllResponse struct {
 	// Массив авторов
 	//
 	// in:body
-	Body []model.Author
+	Body []model.AuthorWithBooks
 }
 
 

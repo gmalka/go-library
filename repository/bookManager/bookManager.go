@@ -16,7 +16,7 @@ type BookManagerI interface {
 	Get(bid, aid int) (model.BookWithAuthor, error)
 	GetAll() ([]model.BookWithAuthor, error)
 	Delete(bid, aid int) error
-	GetAllOfAuthor(aid int) ([]model.BookWithAuthor, error)
+	GetAllOfAuthor(aid int) ([]model.Book, error)
 }
 
 func NewBookManager(db *sqlx.DB) BookManagerI {
@@ -37,6 +37,7 @@ func (a bookManager) GetAll() ([]model.BookWithAuthor, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	books := make([]model.BookWithAuthor, 0, 10)
 	for rows.Next() {
@@ -69,7 +70,7 @@ func (a bookManager) Delete(bid, aid int) error {
 	}
 
 	if i, _ := result.RowsAffected(); i != 1 {
-		return errors.New("Cant find book")
+		return errors.New("cant find book")
 	}
 
 	return nil
@@ -101,29 +102,20 @@ func (a bookManager) Get(bid, aid int) (model.BookWithAuthor, error) {
 	return book, nil
 }
 
-func (a bookManager) GetAllOfAuthor(aid int) ([]model.BookWithAuthor, error) {
-	rows, err := a.db.Query("SELECT * FROM books WHERE author_id=$1", aid)
+func (a bookManager) GetAllOfAuthor(aid int) ([]model.Book, error) {
+	rows, err := a.db.Query("SELECT id, name FROM books WHERE author_id=$1", aid)
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
-	books := make([]model.BookWithAuthor, 0, 10)
+	books := make([]model.Book, 0, 10)
 	for rows.Next() {
-		book := model.BookWithAuthor{}
-		authorId := 0
-		err := rows.Scan(&book.Id, &book.Name, &authorId)
+		book := model.Book{}
+		err := rows.Scan(&book.Id, &book.Name)
 		if err != nil {
 			return nil, err
 		}
-
-		authrRow := a.db.QueryRow("SELECT * FROM author WHERE id=$1", authorId)
-		author := model.Author{}
-		err = authrRow.Scan(&author.Id, &author.Name)
-		if err != nil {
-			return nil, err
-		}
-		
-		book.Auth = author
 
 		books = append(books, book)
 	}

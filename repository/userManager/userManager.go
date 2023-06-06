@@ -33,6 +33,7 @@ func (a userManager) GetAll() ([]model.User, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		user := model.User{}

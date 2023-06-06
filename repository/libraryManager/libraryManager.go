@@ -54,6 +54,7 @@ func (a libraryManger) GetAllTakenBooks() ([]model.TakenBook, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	takenBooks := make([]model.TakenBook, 0, 10)
 	for rows.Next() {
@@ -93,6 +94,7 @@ func (a libraryManger) GetAllTakenBooksOfUser(id int) ([]model.BookWithAuthor, e
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	books := make([]model.BookWithAuthor, 0, 10)
 	for rows.Next() {

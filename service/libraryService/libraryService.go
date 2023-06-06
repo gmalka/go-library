@@ -7,7 +7,7 @@ import (
 type AuthorManagerI interface {
 	Add(author model.Author) error
 	Get(id int) (model.Author, error)
-	GetAll() ([]model.Author, error)
+	GetAll() ([]model.AuthorWithBooks, error)
 	Delete(id int) error
 }
 
@@ -23,7 +23,7 @@ type BookManagerI interface {
 	Get(bid, aid int) (model.BookWithAuthor, error)
 	GetAll() ([]model.BookWithAuthor, error)
 	Delete(bid, aid int) error
-	GetAllOfAuthor(aid int) ([]model.BookWithAuthor, error)
+	GetAllOfAuthor(aid int) ([]model.Book, error)
 }
 
 type LibraryMangerI interface {
@@ -46,13 +46,13 @@ type Library interface {
 
 	AddAuthor(author model.Author) error
 	GetAuthor(id int) (model.Author, error)
-	GetAllAuthors() ([]model.Author, error)
+	GetAllAuthors() ([]model.AuthorWithBooks, error)
 	DeleteAuthor(id int) error
 
 	AddBook(book model.BookWithAuthor) error
 	GetBook(bid, aid int) (model.BookWithAuthor, error)
 	GetAllBooks() ([]model.BookWithAuthor, error)
-	GetAllBooksOfAuthor(aid int) ([]model.BookWithAuthor, error)
+	GetAllBooksOfAuthor(aid int) ([]model.Book, error)
 	DeleteBook(bid, aid int) error
 }
 
@@ -113,7 +113,7 @@ func (m myLibrary) GetAuthor(id int) (model.Author, error) {
 	return m.authorManager.Get(id)
 }
 
-func (m myLibrary) GetAllAuthors() ([]model.Author, error) {
+func (m myLibrary) GetAllAuthors() ([]model.AuthorWithBooks, error) {
 	return m.authorManager.GetAll()
 }
 
@@ -139,6 +139,6 @@ func (m myLibrary) DeleteBook(bid, aid int) error {
 	return m.booksManager.Delete(bid, aid)
 }
 
-func (m myLibrary) GetAllBooksOfAuthor(aid int) ([]model.BookWithAuthor, error) {
+func (m myLibrary) GetAllBooksOfAuthor(aid int) ([]model.Book, error) {
 	return m.booksManager.GetAllOfAuthor(aid)
 }

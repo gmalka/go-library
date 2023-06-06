@@ -13,7 +13,7 @@ type authorManager struct {
 type AuthorManagerI interface {
 	Add(author model.Author) error
 	Get(id int) (model.Author, error)
-	GetAll() ([]model.Author, error)
+	GetAll() ([]model.AuthorWithBooks, error)
 	Delete(id int) error
 }
 
@@ -54,21 +54,40 @@ func (a authorManager) Get(id int) (model.Author, error) {
 	return author, nil
 }
 
-func (a authorManager) GetAll() ([]model.Author, error) {
+func (a authorManager) GetAll() ([]model.AuthorWithBooks, error) {
 	rows, err := a.db.Query("SELECT * FROM author")
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
-	authors := make([]model.Author, 0, 10)
+	authors := make([]model.AuthorWithBooks, 0, 10)
 	for rows.Next() {
-		author := model.Author{}
+		author := model.AuthorWithBooks{}
 
 		err = rows.Scan(&author.Id, &author.Name)
 		if err != nil {
 			return nil, err
 		}
+	
+		books := make([]model.Book, 0, 10)
+		booksRows, err := a.db.Query("SELECT id, name FROM books WHERE author_id=$1", author.Id)
+		if err != nil {
+			return nil, err
+		}
+		defer booksRows.Close()
 
+		for booksRows.Next() {
+			book := model.Book{}
+			err = booksRows.Scan(&book.Id, &book.Name)
+			if err != nil {
+				return nil, err
+			}
+
+			books = append(books, book)
+		}
+
+		author.Books = books
 		authors = append(authors, author)
 	}
 

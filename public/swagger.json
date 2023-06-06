@@ -337,6 +337,28 @@
       },
       "x-go-package": "go-library/model"
     },
+    "AuthorWithBooks": {
+      "type": "object",
+      "properties": {
+        "books": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Book"
+          },
+          "x-go-name": "Books"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Id"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        }
+      },
+      "x-go-package": "go-library/model"
+    },
     "Book": {
       "type": "object",
       "properties": {
@@ -407,7 +429,7 @@
       "schema": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/Author"
+          "$ref": "#/definitions/AuthorWithBooks"
         }
       }
     },

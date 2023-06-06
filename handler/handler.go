@@ -64,13 +64,13 @@ type Library interface {
 
 	AddAuthor(author model.Author) error
 	GetAuthor(id int) (model.Author, error)
-	GetAllAuthors() ([]model.Author, error)
+	GetAllAuthors() ([]model.AuthorWithBooks, error)
 	DeleteAuthor(id int) error
 
 	AddBook(book model.BookWithAuthor) error
 	GetBook(bid, aid int) (model.BookWithAuthor, error)
 	GetAllBooks() ([]model.BookWithAuthor, error)
-	GetAllBooksOfAuthor(aid int) ([]model.BookWithAuthor, error)
+	GetAllBooksOfAuthor(aid int) ([]model.Book, error)
 	DeleteBook(bid, aid int) error
 }
 
