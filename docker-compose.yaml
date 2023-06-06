@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  app:
+    build: ./
+    ports:
+      - 127.0.0.1:8080:8080
+    depends_on:
+      - migrate
+  db:
+    image: postgres
+    ports:
+      - 127.0.0.1:5432:5432
+    environment:
+      POSTGRES_DB: "mytestdb"
+      POSTGRES_USER: "gmalka"
+      POSTGRES_PASSWORD: "postgres"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gmalka -d mytestdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  migrate:
+    image: migrate/migrate
+    volumes:
+      - ./db/migrate:/migration
+    entrypoint:
+      [
+        "migrate",
+        "-path",
+        "/migration",
+        "-database",
+        "postgres://gmalka:postgres@db:5432/mytestdb?sslmode=disable",
+      ]
+    command: ["up"]
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: on-failure
